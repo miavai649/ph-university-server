@@ -4,8 +4,6 @@ import studentValidationSchema from './student.validation';
 
 const createStudent = async (req: Request, res: Response) => {
   try {
-    // creating a schema validation using zod
-
     const { student: studentData } = req.body;
 
     // Validate the student data using Joi
@@ -19,8 +17,8 @@ const createStudent = async (req: Request, res: Response) => {
     //   });
     // }
 
+    // creating a schema validation using zod
     const zodParsedData = studentValidationSchema.parse(studentData);
-    console.log('🚀 ~ createStudent ~ zodParsedData:', zodParsedData);
 
     const result = await StudentServices.createStudentIntoDB(zodParsedData);
 
@@ -29,10 +27,10 @@ const createStudent = async (req: Request, res: Response) => {
       message: 'Student created successfully',
       data: result,
     });
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({
       success: false,
-      message: 'Something went wrong',
+      message: error.message || 'Something went wrong',
       error: error,
     });
   }
