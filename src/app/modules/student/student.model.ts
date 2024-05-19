@@ -95,7 +95,6 @@ const studentSchema = new Schema<TStudent, StudentModel>({
   password: {
     type: String,
     required: [true, 'Password is required'],
-    unique: true,
     maxlength: [20, 'Password can not be more then 20 character'],
   },
   name: {
@@ -163,7 +162,13 @@ const studentSchema = new Schema<TStudent, StudentModel>({
     // enum: ['active', 'block'],
     // default: 'active',
   },
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
 });
+
+// ------------------------ Document middleware start ----------------------------- //
 
 // pre save middleware / hook : will work on create() or save()
 studentSchema.pre('save', async function (next) {
@@ -177,9 +182,38 @@ studentSchema.pre('save', async function (next) {
 });
 
 // post save middleware / hook : will work on create() or save()
-studentSchema.post('save', function () {
-  console.log(this, 'we already saved that data');
+studentSchema.post('save', function (doc, next) {
+  doc.password = ' ';
+
+  next();
 });
+
+// ------------------------ Document middleware end ----------------------------- //
+
+// ------------------------ Query middleware start --------------------------------- //
+
+studentSchema.pre('find', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+
+  next();
+});
+
+studentSchema.pre('findOne', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+
+  next();
+});
+
+// ------------------------- Query middleware end ---------------------------------- //
+
+// -------------------------- aggregation middleware start --------------------------- \\
+
+studentSchema.pre('aggregate', function (next) {
+  this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
+  next();
+});
+
+// -------------------------- aggregation middleware end ------------------------------ \\
 
 // ------------ for static function ---------------- //
 studentSchema.static('isUserExists', async function isUserExists(id: string) {
