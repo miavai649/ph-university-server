@@ -1,29 +1,29 @@
-import { TStudent } from './student.interface';
+// import { TStudent } from './student.interface';
 import { Student } from './student.model';
 
-const createStudentIntoDB = async (studentData: TStudent) => {
-  // static function
-  if (await Student.isUserExists(studentData.id)) {
-    throw new Error('User already exists');
-  }
+// const createStudentIntoDB = async (studentData: TStudent) => {
+//   // static function
+//   if (await Student.isUserExists(studentData.id)) {
+//     throw new Error('User already exists');
+//   }
 
-  const result = await Student.create(studentData); // built-in static method
+// const result = await Student.create(studentData); // built-in static method
 
-  // -------------- INSTANCE ----------------------//
+// -------------- INSTANCE ----------------------//
 
-  // const student = new Student(studentData); //create an instance
+// const student = new Student(studentData); //create an instance
 
-  // instance method
-  // if (await student.isUserExists(studentData.id)) {
-  //   throw new Error('User already exists!');
-  // }
+// instance method
+// if (await student.isUserExists(studentData.id)) {
+//   throw new Error('User already exists!');
+// }
 
-  // const result = await student.save(); // built-in instance method
+// const result = await student.save(); // built-in instance method
 
-  // ------------------- INSTANCE ------------------------------ //
+// ------------------- INSTANCE ------------------------------ //
 
-  return result;
-};
+//   return result;
+// };
 
 const getAllStudentsFromDB = async () => {
   const result = await Student.find();
@@ -44,7 +44,7 @@ const deleteStudentFromDB = async (id: string) => {
 };
 
 export const StudentServices = {
-  createStudentIntoDB,
+  // createStudentIntoDB,
   getAllStudentsFromDB,
   getStudentFromDB,
   deleteStudentFromDB,
