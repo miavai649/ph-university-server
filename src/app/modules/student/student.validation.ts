@@ -1,25 +1,17 @@
 import { z } from 'zod';
 
-// Define the UserName schema
 const userNameValidationSchema = z.object({
   firstName: z
     .string()
-    .max(20, "First name can't be more than 20 characters")
-    .refine(
-      (value) => {
-        const firstNameStr =
-          value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
-        return firstNameStr === value;
-      },
-      { message: 'First name is not in capitalize format' },
-    ),
+    .min(1)
+    .max(20)
+    .refine((value) => /^[A-Z]/.test(value), {
+      message: 'First Name must start with a capital letter',
+    }),
   middleName: z.string().optional(),
-  lastName: z.string().refine((value) => /^[A-Za-z]+$/.test(value), {
-    message: 'Last name is not valid',
-  }),
+  lastName: z.string(),
 });
 
-// Define the Guardian schema
 const guardianValidationSchema = z.object({
   fatherName: z.string(),
   fatherOccupation: z.string(),
@@ -29,7 +21,6 @@ const guardianValidationSchema = z.object({
   motherContactNo: z.string(),
 });
 
-// Define the LocalGuardian schema
 const localGuardianValidationSchema = z.object({
   name: z.string(),
   occupation: z.string(),
@@ -37,24 +28,31 @@ const localGuardianValidationSchema = z.object({
   address: z.string(),
 });
 
-// Define the Student schema
-const studentValidationSchema = z.object({
-  id: z.string(),
-  password: z.string().max(20),
-  name: userNameValidationSchema,
-  gender: z.enum(['male', 'female', 'other']),
-  dateOfBirth: z.string(),
-  email: z.string().email({ message: 'Email is not a valid email address' }),
-  contactNo: z.string(),
-  emergencyContactNo: z.string(),
-  bloodGroup: z.enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']),
-  presentAddress: z.string(),
-  permanentAddress: z.string(),
-  guardian: guardianValidationSchema,
-  localGuardian: localGuardianValidationSchema,
-  profileImg: z.string().optional(),
-  isActive: z.enum(['active', 'block']).default('active'),
-  isDeleted: z.boolean().default(false),
+export const createStudentValidationSchema = z.object({
+  body: z.object({
+    password: z
+      .string({
+        invalid_type_error: 'Password must be string',
+      })
+      .max(20, 'Password can not be more then 20 characters')
+      .optional(),
+    student: z.object({
+      name: userNameValidationSchema,
+      gender: z.enum(['male', 'female', 'other']),
+      dateOfBirth: z.string().optional(),
+      email: z.string().email(),
+      contactNo: z.string(),
+      emergencyContactNo: z.string(),
+      bloodGroup: z.enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']),
+      presentAddress: z.string(),
+      permanentAddress: z.string(),
+      guardian: guardianValidationSchema,
+      localGuardian: localGuardianValidationSchema,
+      profileImg: z.string(),
+    }),
+  }),
 });
 
-export default studentValidationSchema;
+export const studentValidations = {
+  createStudentValidationSchema,
+};
