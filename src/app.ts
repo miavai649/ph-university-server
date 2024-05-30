@@ -25,6 +25,7 @@ const test = (req: Request, res: Response) => {
 
 app.get('/', test);
 
+// global error handler
 app.use(globalErrorHandler);
 
 // Not Found
