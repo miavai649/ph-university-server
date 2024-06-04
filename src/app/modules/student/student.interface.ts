@@ -2,6 +2,12 @@
 
 import { Model, Types } from 'mongoose';
 
+export type TUserName = {
+  firstName: string;
+  middleName?: string;
+  lastName: string;
+};
+
 export type TGuardian = {
   fatherName: string;
   fatherOccupation: string;
@@ -9,12 +15,6 @@ export type TGuardian = {
   motherName: string;
   motherOccupation: string;
   motherContactNo: string;
-};
-
-export type TUserName = {
-  firstName: string;
-  middleName?: string;
-  lastName: string;
 };
 
 export type TLocalGuardian = {
@@ -40,6 +40,7 @@ export type TStudent = {
   localGuardian: TLocalGuardian;
   profileImg?: string;
   admissionSemester: Types.ObjectId;
+  admissionDepartment: Types.ObjectId;
   isDeleted: boolean;
 };
 

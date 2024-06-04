@@ -52,10 +52,10 @@ const getAllStudents = catchAsync(async (req, res) => {
   });
 });
 
-const getStudent = catchAsync(async (req, res) => {
+const getSingleStudent = catchAsync(async (req, res) => {
   const { studentID } = req.params;
 
-  const result = await StudentServices.getStudentFromDB(studentID);
+  const result = await StudentServices.getSingleStudentFromDB(studentID);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -81,6 +81,6 @@ const deleteStudent = catchAsync(async (req, res) => {
 export const StudentControllers = {
   // createStudent,
   getAllStudents,
-  getStudent,
+  getSingleStudent,
   deleteStudent,
 };

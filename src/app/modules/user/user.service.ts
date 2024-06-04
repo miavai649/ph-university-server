@@ -1,4 +1,6 @@
+import httpStatus from 'http-status';
 import config from '../../config';
+import AppError from '../../errors/AppError';
 import { AcademicSemester } from '../academicSemester/academicSemester.model';
 import { TStudent } from '../student/student.interface';
 import { Student } from '../student/student.model';
@@ -22,7 +24,7 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
   );
 
   if (!admissionSemester) {
-    throw new Error('Invalid admission semester id');
+    throw new AppError(httpStatus.BAD_REQUEST, 'Invalid admission semester id');
   }
 
   //set  generated id
