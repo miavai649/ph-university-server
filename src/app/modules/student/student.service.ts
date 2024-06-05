@@ -4,6 +4,7 @@ import AppError from '../../errors/AppError';
 import { Student } from './student.model';
 import mongoose from 'mongoose';
 import { User } from '../user/user.model';
+import { TStudent } from './student.interface';
 
 // const createStudentIntoDB = async (studentData: TStudent) => {
 //   // static function
@@ -54,6 +55,49 @@ const getSingleStudentFromDB = async (id: string) => {
   return result;
 };
 
+const updateStudentIntoDB = async (id: string, payload: Partial<TStudent>) => {
+  const { name, guardian, localGuardian, ...remainingStudentData } = payload;
+
+  const modifiedStudentData: Record<string, unknown> = {
+    ...remainingStudentData,
+  };
+
+  /*
+  name: {
+    firstName: 'Noor'    payload data
+  }
+
+  modified data
+  name.firstName: 'Noor'
+
+  */
+
+  if (name && Object.keys(name).length) {
+    for (const [key, value] of Object.entries(name)) {
+      modifiedStudentData[`name.${key}`] = value;
+    }
+  }
+
+  if (guardian && Object.keys(guardian).length) {
+    for (const [key, value] of Object.entries(guardian)) {
+      modifiedStudentData[`guardian.${key}`] = value;
+    }
+  }
+
+  if (localGuardian && Object.keys(localGuardian).length) {
+    for (const [key, value] of Object.entries(localGuardian)) {
+      modifiedStudentData[`localGuardian.${key}`] = value;
+    }
+  }
+
+  const result = await Student.findOneAndUpdate({ id }, modifiedStudentData, {
+    new: true,
+    runValidators: true,
+  });
+
+  return result;
+};
+
 const deleteStudentFromDB = async (id: string) => {
   if (!(await Student.isUserExists(id))) {
     throw new AppError(httpStatus.NOT_FOUND, 'this student not exists');
@@ -100,4 +144,5 @@ export const StudentServices = {
   getAllStudentsFromDB,
   getSingleStudentFromDB,
   deleteStudentFromDB,
+  updateStudentIntoDB,
 };
