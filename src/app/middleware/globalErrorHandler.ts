@@ -5,6 +5,7 @@ import { TErrorSources } from '../interface/error';
 import handleZodError from '../errors/handleZodError';
 import config from '../config';
 import AppError from '../errors/AppError';
+import handleValidationError from '../errors/handleValidationError';
 
 const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   // settings default values
@@ -22,6 +23,11 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     statusCode = modifiedError.statusCode;
     message = modifiedError.message;
     errorSources = modifiedError.errorSources;
+  } else if (err?.name === 'ValidationError') {
+    const modifiedError = handleValidationError(err);
+    statusCode = modifiedError.statusCode;
+    message = modifiedError.message;
+    errorSources = modifiedError.errorSources;
   }
 
   // ultimate return
@@ -29,6 +35,7 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     success: false,
     message,
     errorSources,
+    err,
     stack: config.NODE_ENV === 'development' ? err?.stack : null,
   });
 };
