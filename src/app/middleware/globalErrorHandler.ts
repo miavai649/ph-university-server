@@ -7,6 +7,7 @@ import config from '../config';
 import AppError from '../errors/AppError';
 import handleValidationError from '../errors/handleValidationError';
 import handleCastError from '../errors/handleCastError';
+import handleDuplicateError from '../errors/handleDuplicateError';
 
 const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   // settings default values
@@ -31,6 +32,11 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     errorSources = modifiedError.errorSources;
   } else if (err?.name === 'CastError') {
     const modifiedError = handleCastError(err);
+    statusCode = modifiedError.statusCode;
+    message = modifiedError.message;
+    errorSources = modifiedError.errorSources;
+  } else if (err?.code === 11000) {
+    const modifiedError = handleDuplicateError(err);
     statusCode = modifiedError.statusCode;
     message = modifiedError.message;
     errorSources = modifiedError.errorSources;
