@@ -152,6 +152,7 @@ const studentSchema = new Schema<TStudent, StudentModel>(
       default: false,
     },
   },
+  // TODO: need to add timestamp here
   {
     toJSON: {
       virtuals: true,
@@ -162,10 +163,10 @@ const studentSchema = new Schema<TStudent, StudentModel>(
 // ------------------ creating virtual property start -------------------------------- \\
 
 studentSchema.virtual('fullName').get(function () {
-  if (this.name.middleName) {
-    return `${this.name.firstName} ${this.name.middleName} ${this.name.lastName}`;
+  if (this?.name?.middleName) {
+    return `${this?.name?.firstName} ${this?.name?.middleName} ${this?.name?.lastName}`;
   }
-  return `${this.name.firstName} ${this.name.lastName}`;
+  return `${this?.name?.firstName} ${this?.name?.lastName}`;
 });
 
 // ------------------ creating virtual property end -------------------------------- \\
