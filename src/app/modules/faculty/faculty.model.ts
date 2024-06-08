@@ -87,11 +87,24 @@ const facultySchema = new Schema<TFaculty>(
       default: false,
     },
   },
+
   {
+    timestamps: true,
     toJSON: {
       virtuals: true,
     },
   },
 );
+
+// generating full name
+facultySchema.virtual('fullName').get(function () {
+  return (
+    this?.name?.firstName +
+    '' +
+    this?.name?.middleName +
+    '' +
+    this?.name?.lastName
+  );
+});
 
 export const Faculty = model<TFaculty>('Faculty', facultySchema);

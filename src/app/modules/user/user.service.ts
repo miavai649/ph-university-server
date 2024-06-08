@@ -7,8 +7,10 @@ import { TStudent } from '../student/student.interface';
 import { Student } from '../student/student.model';
 import { TUser } from './user.interface';
 import { User } from './user.model';
-import { generateStudentId } from './user.utils';
+import { generateFacultyId, generateStudentId } from './user.utils';
 import mongoose, { Error } from 'mongoose';
+import { TFaculty } from '../faculty/faculty.interface';
+import { Faculty } from '../faculty/faculty.model';
 
 const createStudentIntoDB = async (password: string, payload: TStudent) => {
   // create a user object
@@ -44,8 +46,8 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
     }
 
     // setting user id and user reference id in the student collection
-    payload.id = newUser[0].id;
-    payload.user = newUser[0]._id;
+    payload.id = newUser[0]?.id;
+    payload.user = newUser[0]?._id;
 
     // create student
     const newStudent = await Student.create([payload], { session });
@@ -68,6 +70,51 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
   }
 };
 
+const createFacultyIntoDb = async (password: string, payload: TFaculty) => {
+  const userData: Partial<TUser> = {};
+
+  userData.password = password || config.default_password;
+
+  userData.role = 'faculty';
+
+  userData.id = await generateFacultyId();
+
+  const session = await mongoose.startSession();
+
+  try {
+    session.startTransaction();
+
+    const newUser = await User.create([userData], { session });
+
+    if (!newUser.length) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create new user');
+    }
+
+    // setting user id and user reference id in the faculty collection
+    payload.id = newUser[0]?.id;
+    payload.user = newUser[0]?._id;
+
+    const newFaculty = await Faculty.create([payload], { session });
+
+    if (!newFaculty.length) {
+      throw new AppError(
+        httpStatus.BAD_REQUEST,
+        'Failed to create new faculty',
+      );
+    }
+
+    await session.commitTransaction();
+    await session.endSession();
+
+    return newFaculty;
+  } catch (error: any) {
+    await session.abortTransaction();
+    await session.endSession();
+    throw new Error(error);
+  }
+};
+
 export const UserServices = {
   createStudentIntoDB,
+  createFacultyIntoDb,
 };

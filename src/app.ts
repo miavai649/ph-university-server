@@ -18,9 +18,9 @@ app.use(cors());
 app.use('/api/v1', router);
 
 const test = async (req: Request, res: Response) => {
-  Promise.reject();
-  // const a = 'Hello World!';
-  // res.send(a);
+  // Promise.reject();
+  const a = 'Hello World!';
+  res.send(a);
 };
 
 app.get('/', test);

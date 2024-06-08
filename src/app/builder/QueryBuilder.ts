@@ -11,7 +11,6 @@ class QueryBuilder<T> {
 
   search(searchAbleFields: string[]) {
     const searchTerm = this?.query?.searchTerm;
-    console.log('🚀 ~ QueryBuilder<T> ~ search ~ searchTerm:', searchTerm);
 
     if (searchTerm) {
       this.modelQuery = this.modelQuery.find({
@@ -23,8 +22,6 @@ class QueryBuilder<T> {
         ),
       });
     }
-
-    console.log('inside search method', this);
 
     return this;
   }
