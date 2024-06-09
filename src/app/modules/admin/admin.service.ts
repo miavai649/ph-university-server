@@ -22,7 +22,7 @@ const getAllAdminFromDb = async (query: Record<string, unknown>) => {
 };
 
 const getSingleAdminFromDb = async (id: string) => {
-  const result = await Admin.findOne({ id });
+  const result = await Admin.findById(id);
   return result;
 };
 
@@ -39,7 +39,7 @@ const updateAdminIntoDb = async (id: string, payload: Partial<TAdmin>) => {
     }
   }
 
-  const result = await Admin.findOneAndUpdate({ id }, modifiedAdminData, {
+  const result = await Admin.findByIdAndUpdate(id, modifiedAdminData, {
     new: true,
     runValidators: true,
   });
@@ -53,24 +53,26 @@ const deleteAdminFromDb = async (id: string) => {
   try {
     session.startTransaction();
 
-    const deletedUser = await User.findOneAndUpdate(
-      { id },
-      { isDeleted: true },
-      { new: true, session },
-    );
-
-    if (!deletedUser) {
-      throw new AppError(httpStatus.BAD_REQUEST, 'Failed to delete user');
-    }
-
-    const deletedAdmin = await Admin.findOneAndUpdate(
-      { id },
+    const deletedAdmin = await Admin.findByIdAndUpdate(
+      id,
       { isDeleted: true },
       { new: true, session },
     );
 
     if (!deletedAdmin) {
       throw new AppError(httpStatus.BAD_REQUEST, 'Failed to delete admin');
+    }
+
+    const userId = deletedAdmin?.user;
+
+    const deletedUser = await User.findByIdAndUpdate(
+      userId,
+      { isDeleted: true },
+      { new: true, session },
+    );
+
+    if (!deletedUser) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'Failed to delete user');
     }
 
     await session.commitTransaction();

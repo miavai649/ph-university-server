@@ -220,7 +220,7 @@ studentSchema.pre('aggregate', function (next) {
 
 // ------------ for static function ---------------- //
 studentSchema.static('isUserExists', async function isUserExists(id: string) {
-  const existingUser = await Student.findOne({ id });
+  const existingUser = await Student.findById(id);
   return existingUser;
 });
 
