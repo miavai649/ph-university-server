@@ -27,7 +27,22 @@ const getSingleFaculty = catchAsync(async (req, res) => {
   });
 });
 
+const updateFaculty = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const { faculty } = req.body;
+
+  const result = await FacultyServices.updateFacultyIntoDb(id, faculty);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Faculty data updated successfully',
+    data: result,
+  });
+});
+
 export const FacultyControllers = {
   getAllFaculty,
   getSingleFaculty,
+  updateFaculty,
 };
