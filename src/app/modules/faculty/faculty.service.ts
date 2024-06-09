@@ -17,6 +17,12 @@ const getAllFacultyFromDb = async (query: Record<string, unknown>) => {
   return result;
 };
 
+const getSingleFacultyFromDb = async (id: string) => {
+  const result = await Faculty.findOne({ id }).populate('academicDepartment');
+  return result;
+};
+
 export const FacultyServices = {
   getAllFacultyFromDb,
+  getSingleFacultyFromDb,
 };

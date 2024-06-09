@@ -9,6 +9,19 @@ const getAllFaculty = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
+    message: 'Faculties data retrieved successfully',
+    data: result,
+  });
+});
+
+const getSingleFaculty = catchAsync(async (req, res) => {
+  const { id } = req.params;
+
+  const result = await FacultyServices.getSingleFacultyFromDb(id);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
     message: 'Faculty data retrieved successfully',
     data: result,
   });
@@ -16,4 +29,5 @@ const getAllFaculty = catchAsync(async (req, res) => {
 
 export const FacultyControllers = {
   getAllFaculty,
+  getSingleFaculty,
 };
