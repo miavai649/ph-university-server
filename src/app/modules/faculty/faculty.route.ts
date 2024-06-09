@@ -12,5 +12,6 @@ router.patch(
   validateRequest(facultyValidation.updateFacultyValidationSchema),
   FacultyControllers.updateFaculty,
 );
+router.delete('/:id', FacultyControllers.deleteFaculty);
 
 export const FacultyRoutes = router;
