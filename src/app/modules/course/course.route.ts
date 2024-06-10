@@ -12,6 +12,7 @@ router.post(
 );
 router.get('/', CourseControllers.getAllCourse);
 router.get('/:id', CourseControllers.getSingleCourse);
+router.patch('/:id', CourseControllers.updateCourse);
 router.delete('/:id', CourseControllers.deleteCourse);
 
 export const CourseRoutes = router;
