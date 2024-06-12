@@ -196,12 +196,6 @@ const updateOfferedCourseIntoDB = async (
 };
 
 const deleteOfferedCourseFromDB = async (id: string) => {
-  /**
-   * Step 1: check if the offered course exists
-   * Step 2: check if the semester registration status is upcoming
-   * Step 3: delete the offered course
-   */
-
   // check if the offered course exists
   const isOfferedCourseExists = await OfferedCourse.findById(id);
 
