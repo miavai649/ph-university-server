@@ -37,8 +37,11 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
     throw new AppError(httpStatus.BAD_REQUEST, 'Invalid admission semester id');
   }
 
-  //set  generated id
+  //set student generated id
   userData.id = await generateStudentId(admissionSemester);
+
+  // set student email
+  userData.email = payload.email;
 
   const session = await mongoose.startSession();
 
@@ -79,11 +82,11 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
 const createFacultyIntoDb = async (password: string, payload: TFaculty) => {
   const userData: Partial<TUser> = {};
 
+  // setting user data
   userData.password = password || config.default_password;
-
   userData.role = 'faculty';
-
   userData.id = await generateFacultyId();
+  userData.email = payload.email;
 
   const session = await mongoose.startSession();
 
@@ -123,10 +126,11 @@ const createFacultyIntoDb = async (password: string, payload: TFaculty) => {
 const createAdminIntoDb = async (password: string, payload: TAdmin) => {
   const userData: Partial<TUser> = {};
 
+  // setting user data
   userData.password = password || config.default_password;
-
   userData.role = 'admin';
   userData.id = await generateAdminId();
+  userData.email = payload.email;
 
   const session = await mongoose.startSession();
 
