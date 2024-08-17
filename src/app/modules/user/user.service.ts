@@ -166,13 +166,7 @@ const createAdminIntoDb = async (password: string, payload: TAdmin) => {
   }
 };
 
-const getMe = async (token: string) => {
-  console.log('🚀 ~ getMe ~ token:', token);
-  // check if the token is valid or not
-  const decoded = verifyToken(token);
-
-  const { userId, role } = decoded;
-
+const getMe = async (userId: string, role: string) => {
   let result = null;
 
   if (role === USER_ROLE.admin) {
