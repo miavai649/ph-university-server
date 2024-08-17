@@ -19,6 +19,7 @@ import { TAdmin } from '../admin/admin.interface';
 import { Admin } from '../admin/admin.model';
 import jwt, { JwtPayload, verify } from 'jsonwebtoken';
 import { verifyToken } from '../Auth/Auth.utils';
+import { USER_ROLE } from './user.constant';
 
 const createStudentIntoDB = async (password: string, payload: TStudent) => {
   // create a user object
@@ -170,7 +171,21 @@ const getMe = async (token: string) => {
   // check if the token is valid or not
   const decoded = verifyToken(token);
 
-  console.log(decoded);
+  const { userId, role } = decoded;
+
+  let result = null;
+
+  if (role === USER_ROLE.admin) {
+    result = await Admin.findOne({ id: userId });
+  }
+  if (role === USER_ROLE.faculty) {
+    result = await Faculty.findOne({ id: userId });
+  }
+  if (role === USER_ROLE.student) {
+    result = await Student.findOne({ id: userId });
+  }
+
+  return result;
 };
 
 export const UserServices = {

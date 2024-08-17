@@ -58,7 +58,7 @@ const getMe = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Admin created successfully',
+    message: 'User data retrieved successfully',
     data: result,
   });
 });
