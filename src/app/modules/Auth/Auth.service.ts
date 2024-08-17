@@ -4,7 +4,7 @@ import { User } from '../user/user.model';
 import { TLoginUser } from './Auth.interface';
 import config from '../../config';
 import bcrypt from 'bcrypt';
-import { createToken } from './Auth.utils';
+import { createToken, verifyToken } from './Auth.utils';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { sendEmail } from '../../utils/sendEmail';
 
@@ -110,10 +110,7 @@ const changePassword = async (
 
 const refreshToken = async (token: string) => {
   // check if the token is valid or not
-  const decoded = jwt.verify(
-    token,
-    config.jwt_refresh_token as string,
-  ) as JwtPayload;
+  const decoded = verifyToken(token);
 
   const { userId, iat } = decoded;
 
@@ -232,10 +229,7 @@ const resetPassword = async (
   }
 
   // check if the token is valid or not
-  const decoded = jwt.verify(
-    token,
-    config.jwt_access_token as string,
-  ) as JwtPayload;
+  const decoded = verifyToken(token);
 
   if (decoded?.userId !== payload?.id) {
     throw new AppError(httpStatus.FORBIDDEN, 'You are forbidden');

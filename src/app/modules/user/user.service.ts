@@ -17,6 +17,8 @@ import { TFaculty } from '../faculty/faculty.interface';
 import { Faculty } from '../faculty/faculty.model';
 import { TAdmin } from '../admin/admin.interface';
 import { Admin } from '../admin/admin.model';
+import jwt, { JwtPayload, verify } from 'jsonwebtoken';
+import { verifyToken } from '../Auth/Auth.utils';
 
 const createStudentIntoDB = async (password: string, payload: TStudent) => {
   // create a user object
@@ -163,8 +165,17 @@ const createAdminIntoDb = async (password: string, payload: TAdmin) => {
   }
 };
 
+const getMe = async (token: string) => {
+  console.log('🚀 ~ getMe ~ token:', token);
+  // check if the token is valid or not
+  const decoded = verifyToken(token);
+
+  console.log(decoded);
+};
+
 export const UserServices = {
   createStudentIntoDB,
   createFacultyIntoDb,
   createAdminIntoDb,
+  getMe,
 };
