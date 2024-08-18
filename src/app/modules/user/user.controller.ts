@@ -7,8 +7,7 @@ import AppError from '../../errors/AppError';
 const createStudent = catchAsync(async (req, res) => {
   const { password, student: studentData } = req.body;
 
-  // const zodParsedStudentData =
-  //   UserValidation.userValidationSchema.parse(studentData);
+  console.log(req.file);
 
   const result = await UserServices.createStudentIntoDB(password, studentData);
 

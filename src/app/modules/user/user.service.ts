@@ -20,6 +20,7 @@ import { Admin } from '../admin/admin.model';
 import jwt, { JwtPayload, verify } from 'jsonwebtoken';
 import { verifyToken } from '../Auth/Auth.utils';
 import { USER_ROLE } from './user.constant';
+import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
 
 const createStudentIntoDB = async (password: string, payload: TStudent) => {
   // create a user object
@@ -50,6 +51,9 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
 
   try {
     await session.startTransaction();
+
+    // send image to cloudinary
+    sendImageToCloudinary();
 
     const newUser = await User.create([userData], { session });
 
