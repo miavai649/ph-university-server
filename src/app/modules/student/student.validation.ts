@@ -59,11 +59,7 @@ const updateLocalGuardianValidationSchema = z.object({
 
 const createStudentValidationSchema = z.object({
   body: z.object({
-    password: z
-      .string({
-        invalid_type_error: 'Password must be string',
-      })
-      .max(20, 'Password can not be more then 20 characters'),
+    password: z.string().max(20).optional(),
     student: z.object({
       name: createUserNameValidationSchema,
       gender: z.enum(['male', 'female', 'other']),
@@ -76,7 +72,6 @@ const createStudentValidationSchema = z.object({
       permanentAddress: z.string(),
       guardian: createGuardianValidationSchema,
       localGuardian: createLocalGuardianValidationSchema,
-      profileImg: z.string(),
       admissionSemester: z.string(),
       academicDepartment: z.string(),
     }),

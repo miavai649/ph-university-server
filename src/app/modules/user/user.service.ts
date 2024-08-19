@@ -22,7 +22,11 @@ import { verifyToken } from '../Auth/Auth.utils';
 import { USER_ROLE } from './user.constant';
 import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
 
-const createStudentIntoDB = async (password: string, payload: TStudent) => {
+const createStudentIntoDB = async (
+  file: any,
+  password: string,
+  payload: TStudent,
+) => {
   // create a user object
   const userData: Partial<TUser> = {};
 
@@ -47,13 +51,16 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
   // set student email
   userData.email = payload.email;
 
+  const imageName = `${userData.id}${payload.name.firstName}`;
+  const path = file.path;
+
   const session = await mongoose.startSession();
 
   try {
     await session.startTransaction();
 
     // send image to cloudinary
-    sendImageToCloudinary();
+    const { secure_url } = await sendImageToCloudinary(path, imageName);
 
     const newUser = await User.create([userData], { session });
 
@@ -64,6 +71,7 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
     // setting user id and user reference id in the student collection
     payload.id = newUser[0]?.id;
     payload.user = newUser[0]?._id;
+    payload.profileImg = secure_url;
 
     // create student
     const newStudent = await Student.create([payload], { session });
